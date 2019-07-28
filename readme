@@ -1,0 +1,295 @@
+//package.json
+npm init
+//全局安装
+npm install -g webpack
+//安装到你的项目目录
+npm install --save-dev webpack
+
+
+
+app/index.html 写入最基础的html代码，它在这里目的在于引入打包后的js文件,这里为bundle.js
+webpack.config.js 配置文件
+
+
+
+“__dirname”是node.js中的一个全局变量，它指向当前执行脚本所在的目录。这里是webpack-study
+
+
+
+
+npm的start命令是一个特殊的脚本名称，其特殊性表现在，在命令行中使用npm start就可以执行其对于的命令，
+如果对应的此脚本名称不是start，想要在命令行中运行时，需要这样用npm run {script name}如npm run build
+ "scripts": {
+    "start": "webpack" //npm start 执行 webpack命令，该命令自动引用webpack.config.js文件中的配置选项。
+  },
+
+
+一、Source Maps(调试)(在devtool关键字下配置)
+开发总是离不开调试，方便的调试能极大的提高开发效率，不过有时候通过打包后的文件，你是不容易找到出错了的地方，
+对应的你写的代码的位置的，Source Maps就是来帮我们解决这个问题的。
+在webpack的配置文件中配置source maps，需要配置devtool，它有以下四种不同的配置选项，各具优缺点
+##source-map:在一个单独的文件中产生一个完整且功能完全的文件。这个文件具有最好的source map，但是它会减慢打包速度。
+
+##cheap-module-source-map:在一个单独的文件中生成一个不带来列映射的map，不带列映射提高了打包速度，
+但是也使得浏览器开发者工具只能对应到具体的行，不能对应带具体的列（符号），会对调试造成不便。
+
+##eval-source-map:使用eval打包原文件模块，在同一个文件中生成干净完整的source map.这个选项不影响构建速度的前提下生成完整的sourcemap，
+但是对打包后输出的JS文件的执行具有性能和安全的隐患。在开发阶段这是一个非常好的选项，在生产阶段则一低昂不要启动这个选项
+
+##cheap-module-eval-source-map:这是在打包文件是时最快的生成source map的方法，生成的source map会和打包后的JavaScript文件同行显示，
+没有列映射，和eval-source-map选项具有相似的确点。
+
+在webpack.config.js:
+module.exports = {
+  devtool: 'eval-source-map' //source map
+  entry:  __dirname + "/app/main.js",//已多次提及的唯一入口文件
+  output: {
+    path: __dirname + "/public",//打包后的文件存放的地方
+    filename: "bundle.js"//打包后输出文件的文件名
+  }
+}
+
+
+二、使用webpack构建本地服务器（在devServer关键字下配置）
+实现浏览器监听代码的修改，并自动刷新显示修改后的结果。
+webpack提供一个可选的本地开发服务器，这个本地服务器基于node.js构建，可以实现你想要的这些功能。
+不过它是一个单独的组件，在webpack中进行配置之前需要单独装它作为项目依赖
+npm install --save-dev webpack-dev-server
+
+devserver作为webpack配置选项中的一项，以下是它的一些配置选项。
+##contentBase 默认webpack-dev-server会为根文件夹提供本地服务器，如果想为另一个目录下的文件提供本地服务器，
+应该在这里设置所在目录（本例设置到“public”目录）
+##port 设置默认监听端口，如果省略，默认“8080”
+##inline 设置为true，当原文件改变时会自动刷新页面
+##historyApiFallback 在开发单页应用时非常有用，它依赖于HTML5 history API，如果设置为true，所有的跳转将指向index.html
+##noInfo:过滤很多无关内容
+##compress:使用gzip压缩
+
+在webpack中配置devServer的方法如下:
+devServer: {
+        contentBase: "./public",//本地服务器所加载的页面所在的目录
+        historyApiFallback: true,//不跳转
+        inline: true//实时刷新
+},
+
+
+三、Loaders（在module关键字下配置）
+通过使用不同的loader，webpack有能力调用外部的脚本或工具，实现对不同格式的文件处理，比如分析转换scss为css，
+或者把下一代JS文件（ES6,ES7）转换为现代浏览器兼容的JS文件，对React的开发而言，合适的Loader可以把React中用到的JSX文件转换为JS文件。
+
+Loaders需要单独安装并且需要在webpack.config.js中的modules关键字下进行配置。Loaders的配置包括以下几方面。
+##test 一个用以匹配loaders所处理文件的扩展名的正则表达式（必须）
+##loader loader的名称（必须）
+##include/exclude 手动添加必须处理的文件（文件夹）或屏蔽不需要的文件（文件夹）（可选）
+##query 为loaders提供额外的设置选项（可选）
+
+
+四、Babel
+是一个编译JavaScript的平台，它的强大之处表现在可以通过编译实现以下目的：
+##使用下一代的JavaScript代码（ES6,ES7...），即使这些标准目前并未被当前的浏览器完全支持
+##使用基于JavaScript进行了拓展的语言，比如React的JSX。
+
+Babel的安装与配置
+Babel其实是几个模块化的包，其核心功能位于成为babel-core的npm包中，webpack可以把其不同的包整合在一起使用，对于每一个需要的功能或拓展，
+需要安装单独的包（用的最多的是解析ES6的babel-preset-es2015包和解析JSX的babel-preset-react包）
+// npm一次性安装多个依赖模块，模块之间用空格隔开
+npm install --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react
+
+在webpack中配置Babel的方法如下:
+ module: {
+        rules: [
+            {
+                test: /(\.jsx|\.js)$/,
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                        presets: [
+                            "es2015", "react"
+                        ]
+                    }
+                },
+                exclude: /node_modules/
+            }
+        ]
+    }
+
+
+使用React，需安装React和React-DOM
+npm install --save react react-dom
+
+五、css
+webpack提供两个工具处理样式表，css-loader 和 style-loader，二者处理的任务不同
+，css-loader使你能够使用类似@import 和 url(...)的方法实现 require()的功能,
+style-loader将所有的计算后的样式加入页面中，二者组合在一起使你能够把样式表嵌入webpack打包后的JS文件中。
+//安装
+npm install --save-dev style-loader css-loader
+
+###css module
+css module的技术意在把js的模块化思想带入css中，通过css模块，所有的类名，动画名默认只作用于当前模块。
+在css loader中进行配置后，把“module”传递到所需要的地方，然后就可以直接把css的类名传递到组件的代码中，且这样做只对当前组件有效，
+不必担心在不同的模块中使用相同的类名造成冲突
+{
+     test: /\.css$/,
+     use: [
+     {
+     loader: "style-loader"
+     },{
+        loader: "css-loader",
+        options: {
+            modules: true
+        }
+    }
+    ]
+}
+
+###css预处理器
+sass和less之类的预处理器是对原生css的拓展，他们允许使用variables（变量），nesting（嵌套），mixins，inheritance等不存在于css中的特性来写css，
+css预处理可以把这些特殊类型的语句转化为浏览器可识别的css语句
+常用的css处理loaders：
+less-loader
+sass-loader
+stylus-loader
+
+###css处理平台-PostCss（https://github.com/postcss/postcss）
+可以帮助css实现更多的功能。
+比如使用PostCss为css代码自动添加适应不同浏览器的css前缀。
+-首先安装npm install --save-dev postcss-loader autoprefix
+-接下来，在webpack配置文件中添加postcss-loader。
+{
+    loader: "postcss-loader"
+}
+-最后在根目录新建postcss.config.js，并添加plugins
+// postcss.config.js
+module.exports = {
+    plugins: [
+        require('autoprefixer')
+    ]
+}
+
+六、插件（Plugins）
+插件是用来拓展webpack功能的，他们会在整个构建过程中生效，执行相关的任务
+Loader和Plugins是完全不同的，loader是在打包构建过程中用来处理源文件的（JSX，Scss，Less..），一次处理一个，
+插件并不直接操作单个文件，它直接对整个构建过程起作用
+###webpack有很多内置插件,同时也有很多第三方插件。
+###使用插件的方法
+不是webpack自带的插件需要通过npm安装，然后就在webpack配置中的plugin关键（plugin是一个数组）字部分添加该插件的一个实例。
+
+webpack自带的插件：
+1、BannerPlugin:给打包后代码添加版权声明的插件
+plugins: [
+        new webpack.BannerPlugin('版权所有，翻版必究')
+]
+
+2、配置类
+###DefinePlugins：定义全局变量
+你可以理解为，通过配置了DefinePlugin，那么这里面的标识就相当于全局变量，你的业务代码可以直接使用配置的标识。
+比如，你通过下面的设置：
+ // webpack.config.js
+ new webpack.DefinePlugin({
+        __DEV__: true
+    }),
+那么在你的业务代码中可以直接使用，比如有一个index.js
+在index.js 你可以直接这样使用：
+
+// index.js
+if (__DEV__){
+    // 任意代码
+    console.log(‘这个是我通过webpack配置的全局标识’)
+}
+
+###ProvidePlugin
+$出现，就会自动加载模块；$默认为'jQuery'的exports
+用法： new webpack.ProvidePlugin({
+    $: 'jQuery'
+})
+
+###IgnorePlugin
+忽略regExp匹配的模块
+用法：new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+
+###ExtractTextPlugin
+分离css文件
+用法：new ExtractTextPlugin(PRODUCTION ? '[name]-[chunkhash].css' : '[name].css')
+
+###HtmlWebpackPlugin:这个插件的作用是依据一个简单的index.html模板，生成一个自动引用你打包后的JS文件的新index.html。
+这在每次生成的js文件名称不同时非常有用。
+安装：npm install --save-dev html-webpack-plugin
+在app目录下，创建一个index.tmpl.html文件模板，这个模板包含title等必须元素，在编译过程中，插件会依据此模板生成最终的html页面，
+会自动添加所依赖的 css, js，favicon等文件
+plugins: [
+        new webpack.BannerPlugin('版权所有，翻版必究'),
+        new HtmlWebpackPlugin({
+            template: __dirname + "/app/index.tmpl.html"//new 一个这个插件的实例，并传入相关的参数
+        })
+]
+
+
+
+
+3、optimize 优化类
+###UglifyJsPlugin: new webpack.optimize.UglifyJsPlugin([options])
+解析/压缩/美化所有的js chunk，传入options可以满足更多的定制化需求
+sourceMap：生成SourceMap文件，会导致编译过程变慢，默认true
+test/include/exclude：用正则表达式来过滤要处理的文件
+mangle 通过设置except数组来防止指定变量被改变
+new webpack.optimize.UglifyJsPlugin({
+    mangle: {
+        except: ['$super', '$', 'exports', 'require']
+    }
+})
+
+###OccurrenceOrderPlugin
+排序输出，通过模块调用次数给模块分配ids，常用的ids就会分配更短的id，使ids可预测，减小文件大小。
+用法：new webpack.optimize.OccurrenceOrderPlugin(true)
+
+###CommonsChunkPlugin
+合并公共模块为单独文件，比如全局通用的js等，长期不会修改的，从而可以从缓存中取，优化网页性能
+用法：
+new webpack.optimize.CommonsChunkPlugin({
+    names: ['vendor']
+})
+
+4.webpack1迁移到webpack2过渡专用
+###LoaderOptionsPlugin
+webpack1到webpack2迁移过渡专用，对于不支持loader的options的属性，使用此插件
+用法：如下，为vue配置postcss
+new webpac.LoaderOptionsPlugin({
+    vue: {
+        // use custom postcss plugins
+        postcss: function(webpack){
+            return [
+                require('postcss-mixins')
+            ]
+        }
+    }
+})
+
+七、performance：配置webpack的通知提示
+ performance: {
+    hints: options.dev ? false : 'warning'
+  }
+
+八、resolve（文本pack.x）
+模块的处理方案
+1.resolve.alias:设置模块别名，便于使用
+resolve:{
+    alias:{
+        //对象格式 前面为引用的模块名称（自定义）
+        //后面为文件的真实地址
+        boot:path.resolve(__dirname,'plugins/bootstrap/dist')
+    }
+}
+import 'boot/js/bootstrap.js';//引入js
+
+2.resolve.extensions:默认解析扩展路径，设置完成后再引入文件可以去掉后缀名
+resolve:{
+    //当输入./js/demo的时候 就会自动从文件匹配demo.js|demo.json|demo.css符合的文件
+    //所有尽量不要在同一目录下起相同的名称文件
+    extensions:['.js', '.json', '.css', '.sass']
+}
+
+
+九、webpack 其他
+
+###webpack-merge
+可以把分开配置的config合并。分开生产环境和开发环境

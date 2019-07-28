@@ -1,0 +1,46 @@
+<!--js实现物体匀速运动-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body{margin: 0;overflow:hidden;}
+        .box{width:100px;height:100px;background:red;position:absolute;top:100px;left:50px;}
+    </style>
+</head>
+<body>
+<button id="btn1">从left:50px运动到left:500px</button>
+<div class="box" id="box"></div>
+<script>
+    var btn1 = document.getElementById('btn1');
+    var box  = document.getElementById('box');
+
+    btn1.onclick = function(){
+
+        var timer; // 定时器，运动结束后，需要删除
+        var start = 50; // 初始left=50
+        var end   = 1000;// 结束left=500
+        var t = 0;
+        var speed = 0.01; // 控制在每个定时片段中t的变化 t=0 --> t=0.2 --> t=0.4 -->t=0.6-->t=0.8-->t=1结束
+
+        // 现在让定时器每隔30毫秒执行一次
+        timer = setInterval( function(){
+
+            t = t + speed;
+            t = Math.min(t, 1);
+            /*中间值*/
+            //middle = (end-start)/T*t + start (T为总时间，T=1,(end-start)/T 为速度)
+            //当start大于end时，
+            var middle = start * (1 - t) + end * t;
+            box.style.left = middle + 'px';
+
+            if(t >= 1){
+                // 运动结束，定时器停止
+                clearInterval(timer);
+            }
+        }, 30 );
+    };
+</script>
+</body>
+</html>

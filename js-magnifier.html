@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS 放大镜</title>
+    <style>
+        .magnifier-container {
+            position: relative;
+        }
+        .magnifier-slider{
+            position: absolute;
+            width: 214px;
+            height: 286px;
+            background-color: rgba(225, 225, 225, .3);
+            cursor: move;
+            display: none;
+        }
+        .img-big{
+            position: absolute;
+            left: 450px;
+            top: 0px;
+            width: 428px;
+            height: 572px;
+            overflow: hidden;
+            /*display: none;*/
+        }
+        .img-normal{
+            width: 428px;
+            height: 572px;
+        }
+        .img-normal img {
+            width: 100%;
+            height: 100%;
+        }
+        .img-big img{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 856px;
+            height: 1144px;
+        }
+    </style>
+</head>
+<body>
+ <div class="magnifier-container">
+     <div class="img-normal">
+         <div class="magnifier-slider"></div>
+        <img src="./image/person.png">
+     </div>
+     <div class="img-big">
+         <img src="./image/person.png">
+     </div>
+ </div>
+
+</body>
+<script>
+    var slider = document.getElementsByClassName('magnifier-slider')[0]
+    var normalImg = document.getElementsByClassName('img-normal')[0]
+    var bigImg = document.getElementsByClassName('img-big')[0]
+
+    // 移入
+    normalImg.onmousemove = function (event) {
+        slider.style.display = 'block'
+        bigImg.style.display = 'block'
+
+        var top = event.clientY - slider.offsetHeight/2
+        var left = event.clientX - slider.offsetWidth/2
+
+        if (top <= 0) {
+            top = 0
+        }
+        if (top >= normalImg.offsetHeight - slider.offsetHeight) {
+            top = normalImg.offsetHeight - slider.offsetHeight
+        }
+        if (left <= 0) {
+            left = 0
+        }
+        if (left >= normalImg.offsetWidth- slider.offsetWidth) {
+            left = normalImg.offsetWidth- slider.offsetWidth
+        }
+
+        slider.style.top = top + 'px'
+        slider.style.left = left + 'px'
+
+        var bigImg_Img = bigImg.getElementsByTagName('img')[0]
+        bigImg_Img.style.top = -top*2 + 'px'
+        bigImg_Img.style.left = -left*2 + 'px'
+    }
+    
+    // 移出
+    normalImg.onmouseout = function () {
+        slider.style.display = 'none'
+        bigImg.style.display = 'none'
+    }
+</script>
+</html>

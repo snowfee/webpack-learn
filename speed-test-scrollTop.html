@@ -1,0 +1,54 @@
+
+<!--实现页面返回顶部，流畅-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .to-top{
+            width: 50px;
+            height: 50px;
+            background-color: cadetblue;
+            color: aliceblue;line-height: 50px;
+            text-align: center;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            
+        }
+    </style>
+</head>
+<body>
+<h3>Top</h3>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<h3>Middle</h3>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<h3>Footer</h3>
+<div class="to-top" onclick="toTop()">Top</div>
+</body>
+<script>
+    function toTop() {
+        var timer;
+        var start = document.documentElement.scrollTop || document.body.scrollTop;
+        var end = 0;
+        var t = 0;
+        var speed =0.01;
+
+        timer = setInterval( function () {
+            t = t + speed;
+            t = Math.min(t, 1);
+            var middle = (end - start) * t + start;
+            document.documentElement.scrollTop = middle;
+            if(middle <= 150){
+                speed = 0.1;
+            }
+
+            if(t >= 1){
+                clearInterval(timer);
+            }
+        }, 30)
+
+    }
+</script>
+</html>

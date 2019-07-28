@@ -1,0 +1,87 @@
+<!--js 实现slidedown slideup-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .slide-box{
+            width: 400px;
+            /*height: 400px;*/
+            background-color: #cccccc;
+            color: aliceblue;
+            text-align: center;
+            line-height: 40px;
+            font-size: 24px;
+            font-weight: 800;
+            overflow: hidden;
+        }
+        #box2{
+            /*height: 400px;*/
+            overflow: hidden;
+            transition: height 1s linear;
+        }
+        #box2:hover{
+            height: 0px;
+        }
+    </style>
+</head>
+<body>
+<!--<button type="button" onclick="slidedown()">slidedown</button>-->
+<button type="button" onclick="slideUpOrDown()">slideUpOrDown</button>
+<div class="slide-box" id="box">Hello world!<br>Hello world!<br>Hello world!<br>Hello world!<br>Hello world!<br>Hello world!<br>Hello world!</div>
+<button type="button" onclick="slideUpOrDown2()">slideUpOrDown2</button>
+<div class="slide-box" id="box2">Hello world!<br>Hello world!<br>Hello world!<br>Hello world!<br>Hello world!<br>Hello world!<br>Hello world!</div>
+</body>
+<script>
+  /*  function slidedown() {
+        const box = document.getElementById('box');
+        let end = box.offsetHeight;
+        let start  = 0;
+        linear(box, {height: start}, {height: end}, 0.1);
+    }*/
+  /*使用transition实现slideDown slideUp*/
+  const box2Height = document.getElementById('box2').offsetHeight;
+  document.getElementById('box2').style.height = box2Height + 'px';
+    function slideUpOrDown2() {
+        var $box = document.getElementById('box2');
+        if($box.style.height == '0px'){
+            $box.style.height = box2Height + 'px';
+        }else{
+            $box.style.height = '0px';
+        }
+    }
+    const boxHeight = document.getElementById('box').offsetHeight;
+    function slideUpOrDown() {
+        const box = document.getElementById('box');
+        let height = box.offsetHeight;
+        let start,end;
+        if(height != 0){
+            start = height;
+            end  = 0;
+        }else{
+            start = 0;
+            end = boxHeight;
+        }
+        linear(box, {"height": start}, {"height": end}, 0.05);
+    }
+    function linear(box, start, end, speed) {
+        let timer;
+        let t=0;
+        timer = setInterval(function () {
+            t = t + speed;
+            t = Math.min(t, 1);
+            for(let attr in start){
+                let m = (end[attr]-start[attr])*t + start[attr];
+                box.style[attr] = m + 'px';
+            }
+            if( t>=1 ){
+                clearInterval(timer);
+            }
+
+        }, 20);
+
+
+    }
+</script>
+</html>
