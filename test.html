@@ -8,6 +8,52 @@
     </style>
 </head>
 <body>
-
+<canvas id="canvas" width="400" height="400"></canvas>
 </body>
+<script>
+    var canvas = document.getElementById('canvas');
+    if (canvas.getContext) {
+        var ctx = canvas.getContext('2d')
+    }
+    // ctx.beginPath();
+    // ctx.moveTo(75, 50);
+    // ctx.lineTo(100, 75);
+    // ctx.lineTo(100, 25);
+    // ctx.closePath();
+    // ctx.stroke();
+
+    // 二次贝塞尔曲线
+    // ctx.beginPath();
+    // ctx.moveTo(75, 25);
+    // ctx.quadraticCurveTo(25, 25, 25, 62.5);
+    // ctx.quadraticCurveTo(25, 100, 50, 100);
+    // ctx.quadraticCurveTo(50, 120, 30, 125);
+    // ctx.quadraticCurveTo(60, 120, 65, 100);
+    // ctx.quadraticCurveTo(125, 100, 125, 62.5);
+    // ctx.quadraticCurveTo(125, 25, 75, 25);
+    // ctx.stroke();
+
+    // var lineJoin = ['round', 'bevel', 'miter'];
+    // ctx.lineWidth = 10;
+    // for (var i = 0; i < lineJoin.length; i++) {
+    //     ctx.lineJoin = lineJoin[i];
+    //     ctx.miterLimit = 1;
+    //     ctx.beginPath();
+    //     ctx.moveTo(-5, 5 + i * 40);
+    //     ctx.lineTo(35, 45 + i * 40);
+    //     ctx.lineTo(75, 5 + i * 40);
+    //     ctx.lineTo(115, 45 + i * 40);
+    //     ctx.lineTo(155, 5 + i * 40);
+    //     ctx.stroke();
+    // }
+
+    ctx.setLineDash([10, 9]);
+    ctx.strokeRect(10, 10, 100, 100);
+    console.log(ctx.getLineDash())
+    
+    ctx.setLineDash([10, 9, 5]);
+    ctx.strokeRect(120, 10, 100, 100);
+    console.log(ctx.getLineDash()) 
+    
+</script>
 </html>
