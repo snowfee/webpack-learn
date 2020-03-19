@@ -25,10 +25,11 @@
       }
 
       function reject(reason) {
-        if (self.status === 'pending) {
+        if (self.status === 'pending') {
           self.status = 'rejected';
-        self.data = reason;
-      }
+          self.data = reason;
+          
+        }
       }
     }
   </script>
