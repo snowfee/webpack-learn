@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en"> 
+    <meta charset="utf-8"/>
+    <title>svg</title>
+  </head>
+  <style>
+    .paopao{
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: lightseagreen;
+      border-radius: 50%;
+      animation: path 10s linear infinite;
+      offset-path: path("M581.000,9.999 C581.000,9.999 218.067,-62.484 353.000,191.999 C499.518,468.332 483.419,406.059 196.000,448.999 C-54.677,486.449 -33.535,660.423 90.000,689.000");
+    }
+    #icon-product-add {
+      width: 30px;
+      height: 30px;
+    }
+    @keyframes path {
+      to {
+        offset-distance: 100%;
+      }
+    }
+  </style>
+  <body>
+    <!-- <div class="paopao"></div> -->
+    <path id="path" fill-rule="evenodd" fill-opacity="0.102" fill="none"
+      d="M581.000,9.999 C581.000,9.999 218.067,-62.484 353.000,191.999 C499.518,468.332 483.419,406.059 196.000,448.999 C-54.677,486.449 -33.535,660.422 90.000,689.000 "></path>
+
+    <!-- <svg width='360' height="200" xmlns="http://www.w3.org/2000/svg">
+      <text font-size="40">马
+        <animateMotion path="M581.000,9.999 C581.000,9.999 218.067,-62.484 353.000,191.999 C499.518,468.332 483.419,406.059 196.000,448.999 C-54.677,486.449 -33.535,660.422 90.000,689.000 " begin="0s" dur="3s" repeatCount="indefinite" />
+      </text>
+    </svg> -->
+  </body>
+  <script src="./snap.svg.js"></script>
+  <script>
+    var rel = Snap.path.toRelative("M581.000,9.999 C581.000,9.999 218.067,-62.484 353.000,191.999 C499.518,468.332 483.419,406.059 196.000,448.999 C-54.677,486.449 -33.535,660.422 90.000,689.000 "); 
+    console.log('ok', rel.toString())
+  </script>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>弹球动画</title>
+    <style>
+      .boundary{
+        width: 50vw;
+        height: 50vh;
+        box-sizing: border-box;
+        border: 3px solid green;
+        position: relative;
+      }
+      .ball{
+        width: 5vw;
+        height: 5vw;
+        position: absolute;
+        background: red;
+        border-radius: 100%;
+        /* alternate轮流反向播放 */
+        animation: x 2s infinite alternate linear, y 2.2s infinite alternate linear;
+      }
+      @keyframes x{
+        0%{
+          left: 0%
+        }
+        100%{
+          left: calc(100% - 5vw);
+        }
+      }
+      @keyframes y{
+        0%{
+          top: 0%;
+        }
+        100%{
+          top: calc(100% - 5vw);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="boundary">
+      <div class="ball"></div>
+    </div>
+  </body>
+</html>

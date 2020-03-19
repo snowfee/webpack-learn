@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>home</title>
+    <link rel="stylesheet" type="text/css" href="./css/home.css">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <div class="main">
+          <div class="left-side"></div>
+          <ul :style="{ transform: MoveX }" class="part-list">
+            <li v-for="(item, index) in parts" :key="index" class="part-item">
+              <img :src="`./images/${index+1}.png`" />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          parts: ['官网首页', '游戏角色'],
+          partIndex: 0,
+          moveValue: 0
+        }
+      },
+      computed: {
+        MoveX() {
+          return `translateX(${this.moveValue}px)`
+        }
+      },
+      mounted() {
+        this.addWheelEvent()
+      },
+      methods: {
+        addWheelEvent() {
+          // chrome and ie
+          window.addEventListener('mousewheel', this.handleMouseWheel, false)
+          // firefox
+          window.addEventListener('DOMMouseScroll', this.handleMouseWheel, false)
+        },
+        handleMouseWheel(e) {
+          e = e || window.event
+          // 判断浏览器IE，谷歌滑轮事件
+          if (e.wheelDelta) {
+            if (e.wheelDelta > 0) {
+              console.log('向上滑动 左滑')
+              if (this.partIndex > 0) {
+                this.partIndex--
+                this.moveValue = this.partIndex * -1920
+              }
+            }
+            if (e.wheelDelta < 0) {
+              console.log('向下滑动 右滑')
+              if (this.partIndex < this.parts.length - 1) {
+                this.partIndex++
+                this.moveValue = this.partIndex * -1920
+              }
+            }
+          // Firefox滑轮事件
+          } else if (e.detail) {
+            if (e.detail > 0) {
+              console.log('向上滑动 左滑')
+              if (this.partIndex > 0) {
+                this.partIndex--
+                this.moveValue = this.partIndex * -1920
+              }
+            }
+            if (e.detail < 0) {
+              console.log('向下滑动 右滑')
+              if (this.partIndex < this.parts.length - 1) {
+                this.partIndex++
+                this.moveValue = this.partIndex * -1920
+              }
+            }
+          }
+        }
+      }
+    })
+    console.log('ok', app)
+  </script>
+</html>

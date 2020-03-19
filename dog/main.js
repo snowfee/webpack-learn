@@ -80,7 +80,7 @@
       })
     }
     walk() {
-      // 绘制狗的图片, 没过100ms就画一张
+      // 绘制狗的图片, 每过100ms就画一张
       let now = Date.now();
       let distance = (now - this.lastWalkingTime) * this.dog.speed;
       // 每一步至少走stepDistance

@@ -1,0 +1,39 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+body, #app {
+  height: 100%;
+  overflow: hidden;
+}
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.main {
+  width: 1920px;
+  height: 980px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+}
+.left-side {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 277px;
+  height: 980px;
+  background: url('./../images/left-side.png') no-repeat;
+  background-size: contain;
+  z-index: 10;
+}
+.part-list {
+  display: flex;
+  height: 980px;
+  transition: all 1s ease;
+}
+.part-item img{
+    width: 1920px;
+    height: 980px;
+}

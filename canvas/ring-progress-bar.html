@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>canvas圆环进度</title>
+</head>
+<body>
+<canvas id="ring_progress" width="200" height="200"></canvas>
+</body>
+<script>
+  function init(percent) {
+    var ring_p = document.getElementById('ring_progress');
+    var ctx_p = ring_p.getContext('2d');
+    ctx_p.lineWidth = 10;
+    var x = ring_p.width / 2;
+    var y = ring_p.height / 2;
+    var r = ring_p.width / 2 - ctx_p.lineWidth / 2
+    if (percent < 0 || percent > 100) {
+      throw new Error('percent must be between 0 and 100');
+      return
+    }
+    var angle = 0;
+    var timer;
+    (function draw() {
+      timer = window.requestAnimationFrame(draw);
+      ctx_p.clearRect(0, 0, ring_p.width, ring_p.height);
+      // 画底部灰色圆环
+      ctx_p.beginPath();
+      ctx_p.arc(x, y, r, 0, Math.PI * 2, false);
+      ctx_p.strokeStyle = '#ccc';
+      ctx_p.stroke();// 通过线条来绘制图形
+      // 画百分比圆环
+      ctx_p.beginPath();
+      ctx_p.strokeStyle = '#000';
+      ctx_p.arc(x, y, r, -90  * Math.PI / 180, (angle-90) * Math.PI / 180, false);
+      angle++;
+      // 圆环中显示的百分比percentDisplay
+      var percentDisplay = parseInt(angle / 360 * 100);
+      if (angle > (percent / 100 * 360)) {
+        percentDisplay = percent;
+        window.cancelAnimationFrame(timer);
+      };
+      ctx_p.stroke();
+      ctx_p.closePath();
+      // ctx_p.save();
+      ctx_p.beginPath();
+      ctx_p.font = '25px Arial';
+      ctx_p.fillStyle = 'red';
+      var text = percentDisplay + '%';
+      ctx_p.fillText(text, 80, 115);
+      // ctx_p.restore();
+    })()
+  }
+  window.onload = init(80); 
+</script>
+</html>

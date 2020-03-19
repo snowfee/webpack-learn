@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset="UTF-8">
+    <title>水波效果</title>
+    <style>
+      .water-waves{
+        overflow: hidden;
+        height: 100px;
+        width: 100px;
+        margin: 0 auto;
+        border-radius: 50%;
+        border: 1px solid silver;
+        animation: water-waves linear infinite;
+        position: relative;
+      }
+      @keyframes water-waves{
+        0%{ transform: rotate(0deg); }
+        100%{ transform: rotate(360deg); }
+      }
+      .water-wave1{
+        position: absolute;
+        top: 40%;
+        left: -25%;
+        background: #33cfff;
+        opacity: 0.7;
+        width: 200%;
+        height: 200%;
+        border-radius: 40%;
+        animation: inherit;
+        animation-duration: 5s;
+      }
+      .water-wave2{
+        position: absolute;
+        top: 45%;
+        left: -35%;
+        background: #0eaffe;
+        opacity: .5;
+        width: 200%;
+        height: 200%;
+        border-radius: 35%;
+        animation: inherit;
+        animation-duration: 7s;
+      }
+      .water-wave3{
+        position: absolute;
+        top: 50%;
+        left: -35%;
+        background: #0f7ae4;
+        opacity: .3;
+        width: 200%;
+        height: 200%;
+        border-radius: 33%;
+        animation: inherit;
+        animation-duration: 11s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="water-waves">
+      <div class="water-wave1"></div>
+      <div class="water-wave2"></div>
+      <div class="water-wave3"></div>
+    </div>
+  </body>
+</html>

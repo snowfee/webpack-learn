@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset="UTf-8">
+  <title>File对象</title>
+  <style>
+    #dropbox{
+      width: 300px;
+      height: 100px;
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <!-- 使用拖放来选择文件 -->
+  <div id="dropbox"></div>
+  <div id="preview"></div>
+</body>
+<script>
+  let dropbox, preview;
+  dropbox = document.getElementById('dropbox');
+  // 图片预览box
+  preview = document.getElementById('preview');
+  dropbox.addEventListener('dragenter', handleDragenter, false);
+  dropbox.addEventListener('dragover', handelDragover, false);
+  dropbox.addEventListener('drop', handleDrop, false);
+  function handleDragenter(e) {
+    console.log('ok')
+    // 禁止事件传播和阻止默认事件
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  function handelDragover(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function handleDrop(e) {
+    console.log('ok2', e)
+    e.stopPropagation();
+    e.preventDefault();
+
+    // 从事件中的dataTransfer中获取文件列表
+    var dt = e.dataTransfer;
+    var files = dt.files;
+    // 处理图像/文件
+    handleFiles(files);
+  }
+
+  function handleFiles(files) {
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      var imageType = /^image\//;
+      console.log('file', file);
+      if (!imageType.test(file.type)) {
+        continue;
+      }
+
+      var img = document.createElement('img');
+      img.classList.add("obj");
+      // img.file = file;
+      preview.appendChild(img);
+
+
+      // 使用对象URL
+      // img.onload = function() {
+      //   window.URL.revokeObjectURL(this.src);
+      // }
+      // img.src = window.URL.createObjectURL(file);
+
+      // 使用读取文件的方式
+      var reader = new FileReader();
+      reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+      // 开始读取指定的Bold中的内容。一旦完成，在result属性中将包含一个data:URL格式的字符串以表示所读取文件的内容
+      reader.readAsDataURL(file);
+    }
+  }
+
+</script>
+</html>

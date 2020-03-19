@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>Promise实现</title>
+  </head>
+  <body></body>
+  <script>
+    function Promise(executor) {
+      var self = this;
+      self.status = 'pending';
+      self.data = undefined;
+      // promise状态变为resolve时的回调函数集，可能有多个
+      self.onResolvedCallback = [];
+      // promise状态变为reject时的回调函数集，可能有多个
+      function resolve(value) {
+        if (self.status === 'pending') {
+          self.status = 'resolved';
+          self.data = value;
+          // ???
+          for (var i = 0; i < self.onResolvedCallback.length; i++) {
+            self.onResolvedCallback[i](value) 
+          } 
+        }
+      }
+
+      function reject(reason) {
+        if (self.status === 'pending) {
+          self.status = 'rejected';
+        self.data = reason;
+      }
+      }
+    }
+  </script>
+</html>

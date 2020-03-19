@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html style="font-size: 12px;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>add account</title>
+  <style>
+    .login-box {
+      font-size: 1.5rem;
+    }
+
+    .form-row {
+      margin-bottom: 15px;
+    }
+
+    .label {
+      display: inline-block;
+      width: 100px;
+    }
+
+    input {
+      font-size: 1.5rem;
+    }
+
+    button {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-box">
+    <div class="form-row">
+      <span class="label">生成账号名</span>
+      <input type="text" id="account" />
+    </div>
+    <div class="form-row">
+      <span class="label">生成密码</span>
+      <input type="text" id="pwd" />
+    </div>
+    <button type="button" onclick="submit()">提交</button>
+  </div>
+</body>
+<script>
+  function submit() {
+    // var account = document.getElementById('account').value;
+    // var pwd = document.getElementById('pwd').value;
+    // if (!account || !pwd) {
+    //   alert('请完整填写表单')
+    //   return
+    // }
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = handleStateChange;
+    var url = 'http://192.168.3.144:5601/elasticsearch/_msearch?rest_total_hits_as_int=true&ignore_throttled=true'
+    var sendData = '{"index":"blx*","ignore_unavailable":true,"preference":1583895464786}' 
+      + '\n' 
+      + '{"timeout":"30000ms","version":true,"from":0,"size":3,"search_after":[1583895464786,"8dmDx3ABn94mc9bHr_7z"],"sort":[{"@timestamp":{"order":"desc","unmapped_type":"boolean"}},{"_id":{"order":"asc","unmapped_type":"boolean"}}],"_source":{"excludes":[]},"aggs":{"2":{"date_histogram":{"field":"@timestamp","fixed_interval":"1d","time_zone":"Asia/Shanghai","min_doc_count":1}}},"stored_fields":["*"],"script_fields":{},"docvalue_fields":[{"field":"@timestamp","format":"date_time"}],"query":{"bool":{"must":[],"filter":[{"multi_match":{"type":"best_fields","query":"你的泪","lenient":true}},{"range":{"@timestamp":{"format":"strict_date_optional_time","gte":"2019-12-12T06:30:14.480Z","lte":"2020-03-11T06:30:14.480Z"}}}],"should":[],"must_not":[]}},"highlight":{"pre_tags":["@kibana-highlighted-field@"],"post_tags":["@/kibana-highlighted-field@"],"fields":{"*":{}},"fragment_size":2147483647}}'
+      + '\n';
+    xmlhttp.open('POST', url, true);
+    xmlhttp.setRequestHeader('Content-Type', 'text/plain');
+    xmlhttp.setRequestHeader('kbn-version', '7.4.2');
+    xmlhttp.send(sendData);
+    function handleStateChange() {
+      if (xmlhttp.readyState == 4) {
+        if (xmlhttp.status === 200) {
+          var res = JSON.parse(xmlhttp.response);
+          if (res.code === 0) {
+            alert('添加成功');
+          } else {
+            alert(res.msg);
+          }
+        } else {
+          alert('err: ' + xmlhttp.status);
+        }
+        console.log(xmlhttp);
+      }
+    }
+  }
+</script>
+
+</html>
