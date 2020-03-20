@@ -13,24 +13,48 @@
       // promise状态变为resolve时的回调函数集，可能有多个
       self.onResolvedCallback = [];
       // promise状态变为reject时的回调函数集，可能有多个
+      self.onRejectedCallback = [];
       function resolve(value) {
-        if (self.status === 'pending') {
-          self.status = 'resolved';
-          self.data = value;
-          // ???
-          for (var i = 0; i < self.onResolvedCallback.length; i++) {
-            self.onResolvedCallback[i](value) 
-          } 
-        }
+        setTimeout(function () { // 异步调用
+          if (self.status === 'pending') {
+            self.status = 'resolved';
+            self.data = value;
+            // ???
+            for (var i = 0; i < self.onResolvedCallback.length; i++) {
+              self.onResolvedCallback[i](value)
+            }
+          }
+        }, 0)
       }
 
       function reject(reason) {
-        if (self.status === 'pending') {
-          self.status = 'rejected';
-          self.data = reason;
-          
-        }
+        setTimeout(function() {
+          if (self.status === 'pending') {
+            self.status = 'rejected';
+            self.data = reason;
+            for (var i = 0; i < self.onRejectedCallback.length; i++) {
+              self.onRejectedCallback[i](reason)
+            }
+          }
+        })
       }
-    }
+      
+      try {
+        executor(resolve, reject);
+      } catch(e) {
+        reject(e)
+      }
+    };
+    Promise.prototype.then = function (onResolve, onReject) {
+      this.onResolvedCallback.push(onResolve)
+      this.onRejectedCallback.push(onReject)
+    };
+    const promise = new Promise((resolve) => {
+      console.log('ok')
+      resolve(1);
+    });
+    promise.then((a) => console.log(a));
+    promise.then((b) => console.log(b + 1));
+    console.log('end')
   </script>
 </html>
